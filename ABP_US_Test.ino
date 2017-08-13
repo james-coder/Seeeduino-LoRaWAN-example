@@ -1,4 +1,4 @@
-#include <LoRaWan.h>
+#include "LoRaWan.h"
 
 
 unsigned char data[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0xA,};
@@ -12,7 +12,7 @@ void setup(void)
     
     lora.init();
     lora.setDeviceDefault();
-	
+  
     memset(buffer, 0, 256);
     lora.getVersion(buffer, 256, 1);
     SerialUSB.print(buffer); 
@@ -27,12 +27,8 @@ void setup(void)
     lora.setKey("B185A5ABF3DE774C8E2DF6B09F042AB6", "0FDA6921BDCAD36FB666E99F39C62AD7", NULL);
     
     lora.setDeciveMode(LWABP);
-    lora.setDataRate(DR0, US915);
+    lora.setDataRate(DR3, US915);
     lora.setAdaptiveDataRate(false);
-        
-    // lora.setChannel(0, 902.3, DR0, DR3);
-    // lora.setChannel(1, 902.5, DR0, DR3);
-    // lora.setChannel(2, 902.7, DR0, DR3);
 
     for(uint8_t i = 0; i < 72; i ++)lora.setChannel(i, 0);
     
@@ -44,6 +40,8 @@ void setup(void)
     lora.setChannel(5, 904.9, DR0, DR3);
     lora.setChannel(6, 905.1, DR0, DR3);
     lora.setChannel(7, 905.3, DR0, DR3);
+
+    //Turning this on gets "DR error"
     //lora.setChannel(8, 904.6, DR4, DR4);
     
     lora.setReceiceWindowFirst(0);
@@ -56,8 +54,8 @@ void loop(void)
 {
     bool result = false;
     
-    result = lora.transferPacket("Hello Ogden!", 3);
-    //result = lora.transferPacket(data, 10, 10);
+    //result = lora.transferPacket("Hello", 5, 10);
+    result = lora.transferPacket(data, 10, 5);
     
     if(result)
     {
@@ -83,6 +81,7 @@ void loop(void)
             SerialUSB.println();
         }
     }
-	
-	// lora.loraDebug();
+  
+  // lora.loraDebug();
+  delay(1000);
 }
